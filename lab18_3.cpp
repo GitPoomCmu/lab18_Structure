@@ -11,7 +11,7 @@ struct student{
     string name;
     int id;
     char gender;
-    double gpa;
+    float gpa;
 };
 
 struct course{
@@ -21,7 +21,7 @@ struct course{
 	vector<student *> student_list;
 };
 
-student * findstudent(vector<student> allstudents,int key){
+student * findstudent(vector<student> &allstudents,int key){
 	for(unsigned int i = 0; i < allstudents.size(); i++){
 		if(allstudents[i].id  == key) return &allstudents[i];
 	}
@@ -64,7 +64,9 @@ int main(){
 	
 	while(getline(student_file,textline)){
 		student s; 
-		sscanf(textline, "%s %d %c %f", s.name, &s.id, s.gender, &s.gpa);
+		char student_name[100];
+		sscanf(textline.c_str(), "%[^,],%d,%c,%f", student_name, &s.id, &s.gender, &s.gpa);
+		s.name = student_name;
 		allstudents.push_back(s); 		
 	}
 	
@@ -82,14 +84,14 @@ int main(){
 			if(textline == "> Students"){
 				state = 3;
 			}else{
-			    allcourses.push_back(textline);  
+			    allcourses[allcourses.size()-1].lecture_list.push_back(textline);  
 			}			
 		}else{
 			if(textline == "---------------------------------------"){
 				state = 1;
 			}else{
 				student *p = findstudent(allstudents,atof(textline.c_str()));
-				allstudents.push_back(*p);
+				allcourses[allcourses.size()-1].student_list.push_back(p);
 				
 			}
 		}
